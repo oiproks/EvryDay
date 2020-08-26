@@ -34,10 +34,10 @@
             this.btnClose = new System.Windows.Forms.Button();
             this.tabMain = new System.Windows.Forms.TabControl();
             this.tabCamera = new System.Windows.Forms.TabPage();
-            this.defaultPic = new System.Windows.Forms.PictureBox();
+            this.defaultPic = new EvryDay.Resources.TransparentPicBox();
+            this.camera = new System.Windows.Forms.PictureBox();
             this.tlpShutter = new System.Windows.Forms.TableLayoutPanel();
             this.btnShutter = new System.Windows.Forms.Button();
-            this.camera = new System.Windows.Forms.PictureBox();
             this.tabHistory = new System.Windows.Forms.TabPage();
             this.tabSettings = new System.Windows.Forms.TabPage();
             this.cmbCameras = new System.Windows.Forms.ComboBox();
@@ -45,9 +45,8 @@
             this.panel1.SuspendLayout();
             this.tabMain.SuspendLayout();
             this.tabCamera.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.defaultPic)).BeginInit();
-            this.tlpShutter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.camera)).BeginInit();
+            this.tlpShutter.SuspendLayout();
             this.tabSettings.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -138,14 +137,13 @@
             this.tabMain.SelectedIndex = 0;
             this.tabMain.Size = new System.Drawing.Size(488, 388);
             this.tabMain.TabIndex = 1;
-            this.tabMain.SelectedIndexChanged += new System.EventHandler(this.ChangeTab);
             // 
             // tabCamera
             // 
             this.tabCamera.BackColor = System.Drawing.Color.Gainsboro;
             this.tabCamera.Controls.Add(this.defaultPic);
-            this.tabCamera.Controls.Add(this.tlpShutter);
             this.tabCamera.Controls.Add(this.camera);
+            this.tabCamera.Controls.Add(this.tlpShutter);
             this.tabCamera.Location = new System.Drawing.Point(4, 22);
             this.tabCamera.Margin = new System.Windows.Forms.Padding(0);
             this.tabCamera.Name = "tabCamera";
@@ -163,15 +161,28 @@
             this.defaultPic.BackColor = System.Drawing.Color.Transparent;
             this.defaultPic.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.defaultPic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.defaultPic.Image = null;
             this.defaultPic.Location = new System.Drawing.Point(0, 0);
-            this.defaultPic.Margin = new System.Windows.Forms.Padding(0);
             this.defaultPic.MinimumSize = new System.Drawing.Size(480, 320);
             this.defaultPic.Name = "defaultPic";
             this.defaultPic.Size = new System.Drawing.Size(480, 320);
-            this.defaultPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.defaultPic.TabIndex = 3;
-            this.defaultPic.TabStop = false;
-            this.defaultPic.Visible = false;
+            this.defaultPic.TabIndex = 4;
+            // 
+            // camera
+            // 
+            this.camera.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.camera.BackColor = System.Drawing.Color.GhostWhite;
+            this.camera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.camera.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.camera.Location = new System.Drawing.Point(0, 0);
+            this.camera.MinimumSize = new System.Drawing.Size(480, 320);
+            this.camera.Name = "camera";
+            this.camera.Size = new System.Drawing.Size(480, 320);
+            this.camera.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.camera.TabIndex = 5;
+            this.camera.TabStop = false;
             // 
             // tlpShutter
             // 
@@ -212,22 +223,6 @@
             this.btnShutter.MouseEnter += new System.EventHandler(this.BtnShutter_MouseEnter);
             this.btnShutter.MouseLeave += new System.EventHandler(this.BtnShutter_MouseLeave);
             this.btnShutter.MouseUp += new System.Windows.Forms.MouseEventHandler(this.BtnShutter_MouseUp);
-            // 
-            // camera
-            // 
-            this.camera.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.camera.BackColor = System.Drawing.Color.White;
-            this.camera.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.camera.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.camera.Location = new System.Drawing.Point(0, 0);
-            this.camera.MinimumSize = new System.Drawing.Size(480, 320);
-            this.camera.Name = "camera";
-            this.camera.Size = new System.Drawing.Size(480, 320);
-            this.camera.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.camera.TabIndex = 0;
-            this.camera.TabStop = false;
             // 
             // tabHistory
             // 
@@ -289,9 +284,8 @@
             this.panel1.ResumeLayout(false);
             this.tabMain.ResumeLayout(false);
             this.tabCamera.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.defaultPic)).EndInit();
-            this.tlpShutter.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.camera)).EndInit();
+            this.tlpShutter.ResumeLayout(false);
             this.tabSettings.ResumeLayout(false);
             this.tabSettings.PerformLayout();
             this.ResumeLayout(false);
@@ -308,12 +302,12 @@
         private System.Windows.Forms.TabPage tabSettings;
         private System.Windows.Forms.Button btnExpand;
         private System.Windows.Forms.Button btnMinimize;
-        private System.Windows.Forms.PictureBox camera;
         private System.Windows.Forms.Button btnShutter;
         private System.Windows.Forms.TableLayoutPanel tlpShutter;
-        private System.Windows.Forms.PictureBox defaultPic;
         private System.Windows.Forms.ComboBox cmbCameras;
         private System.Windows.Forms.Label label1;
+        private Resources.TransparentPicBox defaultPic;
+        private System.Windows.Forms.PictureBox camera;
     }
 }
 

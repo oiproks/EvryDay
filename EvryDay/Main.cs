@@ -1,7 +1,7 @@
 ﻿using AForge.Video.DirectShow;
-using EvryDay.Properties;
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -14,6 +14,7 @@ namespace EvryDay
         VideoCaptureDevice videoCaptureDevice;
         FilterInfoCollection filterInfoCollection;
         bool hasCamera = false, snapshot = false;
+        Image defaultImage = null;
         #endregion
 
         #region Common
@@ -45,10 +46,11 @@ namespace EvryDay
             }
         }
 
-        private void ChangeTab(object sender, EventArgs e)
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (tabMain.SelectedTab.Tag.Equals("camera"))
-                VideoCaptureDeviceInit();
+            StopVideo();
+
+            Environment.Exit(0);
         }
 
         #region TopBar Buttons
@@ -177,43 +179,57 @@ namespace EvryDay
         #endregion
 
         #region CameraTab
-
         #region ShutterButton
+        #region VisualEffects
         private void BtnShutter_MouseEnter(object sender, EventArgs e)
         {
-            btnShutter.BackgroundImage = Resources.camera_shutter_over;
+            btnShutter.BackgroundImage = Properties.Resources.camera_shutter_over;
         }
 
         private void BtnShutter_MouseLeave(object sender, EventArgs e)
         {
-            btnShutter.BackgroundImage = Resources.camera_shutter;
+            btnShutter.BackgroundImage = Properties.Resources.camera_shutter;
         }
 
         private void BtnShutter_MouseUp(object sender, MouseEventArgs e)
         {
-            btnShutter.BackgroundImage = Resources.camera_shutter_over;
+            btnShutter.BackgroundImage = Properties.Resources.camera_shutter_over;
         }
 
         private void BtnShutter_MouseDown(object sender, MouseEventArgs e)
         {
-            btnShutter.BackgroundImage = Resources.camera_shutter_click;
+            btnShutter.BackgroundImage = Properties.Resources.camera_shutter_click;
         }
+        #endregion
 
         private void BtnShutter_Click(object sender, EventArgs e)
         {
             if (!snapshot)
             {
                 snapshot = true;
-            } else
+
+                //TODO: show save/delete button
+            }
+            else
             {
                 snapshot = false;
 
-                defaultPic.Visible = false;
+                if (defaultImage == null)
+                    defaultPic.Visible = false;
+                else
+                {                    
+                    defaultPic.Visible = true;
+                }
+
                 VideoCaptureDeviceInit();
+                
+                if (defaultImage != null)
+                    defaultPic.Image = SetAlpha((Bitmap)defaultImage, 100);
             }
         }
         #endregion
 
+        #region CameraManager
         private void VideoCaptureDeviceInit()
         {
             videoCaptureDevice = new VideoCaptureDevice(filterInfoCollection[cmbCameras.SelectedIndex].MonikerString);
@@ -229,17 +245,44 @@ namespace EvryDay
             {
                 StopVideo();
 
+                //if (defaultImage == null)
+                defaultImage = image;
+
+                //defaultPic.Visible = true;
                 defaultPic.Visible = true;
-                defaultPic.Image = image;
+                camera.Image = null;
             }
-            camera.Image = image;
+            else
+            {
+                if (camera.Image != null)
+                    camera.Image.Dispose();
+                camera.Image = image;
+            }
         }
 
-        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        static Bitmap SetAlpha(Bitmap bmpIn, int alpha)
         {
-            StopVideo();
+            Bitmap bmpOut = new Bitmap(bmpIn.Width, bmpIn.Height);
+            float a = alpha / 255f;
+            Rectangle r = new Rectangle(0, 0, bmpIn.Width, bmpIn.Height);
 
-            Environment.Exit(0);
+            float[][] matrixItems = {
+                new float[] {1, 0, 0, 0, 0},
+                new float[] {0, 1, 0, 0, 0},
+                new float[] {0, 0, 1, 0, 0},
+                new float[] {0, 0, 0, a, 0},
+                new float[] {0, 0, 0, 0, 1}
+            };
+
+            ColorMatrix colorMatrix = new ColorMatrix(matrixItems);
+
+            ImageAttributes imageAtt = new ImageAttributes();
+            imageAtt.SetColorMatrix(colorMatrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+
+            using (Graphics g = Graphics.FromImage(bmpOut))
+                g.DrawImage(bmpIn, r, r.X, r.Y, r.Width, r.Height, GraphicsUnit.Pixel, imageAtt);
+
+            return bmpOut;
         }
 
         private void StopVideo()
@@ -256,6 +299,7 @@ namespace EvryDay
                 videoCaptureDevice.NewFrame -= VideoCaptureDevice_NewFrame;
             }
         }
+        #endregion
         #endregion
 
         #region HistoryTab
